@@ -37,21 +37,27 @@ usage:
     list COL             lists enumerated tasks
     move COL NUM COL     moves from column to column, by number
     all                  list all columns; default output when run without args
+    remove COL NUM		 remove task
+    edit COL			edit column file in editor
+    note COL NUM		if task is a file name in board then this will open note file
 
 configuration:
     kanbash expects a config file at $HOME/.config/kanbash/config
-    example config:
+    example config from gwyrdh usage:
         
         # not completed
-        nc="nc"
+        in="in"
         
         # in progress
-        ip="ip"
+        work="work"
+
+	# waiting to be confirmed / could use hold
+	zap='zap'
         
-        # done
+        # done this is not viewed by all - it is hidden to save space
         dn="done"
 
-        board=/home/icy/code/kanbash/test
+        board=$pwd
 
     board can also be specified by setting the KB_BOARD environment
     variable; use absolute paths (/home/user/foo/bar).
@@ -87,12 +93,23 @@ check_col() {
     }
 }
 
+# gwyrdh added so that there is a character limit on tasks so that the layout doesn't get messed. 
+# problems of small laptop screen
+# Idea from clikan
+# Number of characters currently fixed in code - maybe add as variable
 add() {
     col="$1"
     check_col "$col"
     shift
     task="$@"
-    printf '%s\n' "$task" >> "$board/$col"
+	words=$(echo -n "$@"|wc -m)
+	printf '%s\n' "$words"
+	if [[ "$words" -gt 33 ]] ; then
+		echo 'Sorry no more than 33 chars! Brevity counts.'
+    else
+    	printf '%s\n' "$task" >> "$board/$col"
+    fi
+    kb
 }
 
 list() {
@@ -208,11 +225,21 @@ init() {
     printf '%s\n' "kanbash: initialized at $board"
 }
 
+# gwyrdh hacked so the three columns are horizontal. colours to highlight column names and line count
+# columns can exist as files in $board but not shown on list all. can be viewed using list. 
+# the done column is used this way
+
 all() {
-    # The three columns.
-    for c in "$nc" "$ip" "$dn"; do
-        list "$c"
-    done
+    # The three columns
+    # gwyrdh using temp1.txt is clunky but allows the output to be checked. probably will change to temp file
+    list $in > $board/temp1.txt
+    list $work > $board/temp2.txt
+    list $zap > $board/temp3.txt
+    printf "\n \n"
+    # gwyrdh can't get printf to work so using paste and column
+	paste "$board/temp1.txt" "$board/temp2.txt" "$board/temp3.txt" | column -t -s $'\t' -o '   ' 
+    rm $board/temp1.txt $board/temp2.txt $board/temp3.txt
+    printf "\n \n"
 }
 
 main() {
@@ -245,6 +272,20 @@ main() {
         m*)
             shift
             move "$@"
+            ;;
+        r*)
+            shift
+            remove "$@"
+            ;;
+            
+ 	e*)
+            shift
+            edit "$@"
+            ;;
+            
+ 	n*)
+            shift
+            note "$@"
             ;;
 
         h)
