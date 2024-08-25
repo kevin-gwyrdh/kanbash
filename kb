@@ -100,11 +100,13 @@ list() {
     check_col "$col"
     mapfile -t f < "$board/$col"
     count=0
+# gwyrdh added more space top and bottom
+    printf "\n"
     printf '%b\n' "\e[1m${col^^}\e[0m"
     for line in "${f[@]}"; do
         printf '%b\n' "\e[36m$(( count++ ))\e[0m  $line"
     done
-    printf '\n'
+    printf '\n\n'
 }
 
 move() {
@@ -133,6 +135,65 @@ move() {
     for line in "${f[@]}"; do
          printf '%s\n' "$line" >> "$board/$fcol"
     done
+}
+
+# gwyrdh added remove based on move
+remove() {
+    [[ "$#" -ne 2 ]] && {
+        printf '%s\n' "error: invalid number of arguments"
+        usage
+        exit
+    }
+
+    fcol="$1"
+    n="$2"
+
+    check_col "$fcol"
+
+    mapfile -t f < "$board/$fcol"
+    chosen="${f["$n"]}"
+
+    unset -v f["$n"]
+    # TODO: inelegant, but whatever.
+    rm "$board/$fcol"
+    [[ "${#f[@]}" -eq 0 ]] && touch "$board/$fcol"
+    for line in "${f[@]}"; do
+         printf '%s\n' "$line" >> "$board/$fcol"
+    done
+    kb
+}
+# gwyrdh added to allow a column to be selected and edited in editor
+# usage kb edit "Column name"
+edit() {
+    [[ "$#" -ne 1 ]] && {
+        printf '%s\n' "error: invalid number of arguments"
+        usage
+        exit
+    }
+
+    fcol="$1"
+	${EDITOR} "$board/$1"
+	kb
+}
+
+# gwyrdh added note based on kanbanbash feature. allows a task to be linked to a txt file in the $pwd and opened through kb
+# usage kb note "column" "task number"
+note() {
+    [[ "$#" -ne 2 ]] && {
+        printf '%s\n' "error: invalid number of arguments"
+        usage
+        exit
+    }
+
+    fcol="$1"
+    n="$2"
+    
+    check_col "$fcol"
+# TODO: what is mapfile function
+    mapfile -t f < "$board/$fcol"
+    chosen="${f["$n"]}"
+    ${EDITOR} "$board"/"$chosen"
+    kb
 }
 
 init() {
