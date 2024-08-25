@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
+# gwyrdh drew additional inspiration from 
+# kanban bash https://github.com/coderofsalvation/kanban.bash
+# clikan https://github.com/kitplummer/clikan
+
 # gwyrdh - make portable with config in pwd in hidden folder .kb
+# this does mean that the user has to call kanbash from the the working directory
+# edit back to original if this doesn't suite
+# I use this  script from kanban.bash which opens kanbash when the directory with .kb config is entered
+# cd(){
+#  builtin cd ${1:+"$@"} && [[ -d ./.kb ]] &&  ~/Bin/kb
+#}
+
 # CONFIG=~/.config/kanbash/config
 CONFIG=$PWD/.kb/config
 
