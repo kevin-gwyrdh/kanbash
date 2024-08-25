@@ -48,6 +48,26 @@ configuration:
     printf '%s\n' "$help_str"
 }
 
+# gwyrdh added to load colour shortcuts
+
+C0="\033[0m"
+# text reset
+
+C1="\033[37;1m"
+# white bold
+
+C2="\033[91;1m"
+# red bold
+
+C3="\033[91;5m"
+# red flash
+
+C4="\033[92;1m"
+# green bold
+
+C5="\033[96m"
+# cyan
+
 check_col() {
     col="$1"
     [[ ! -f "$board/$col" ]] && {
