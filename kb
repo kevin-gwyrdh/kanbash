@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
-CONFIG=~/.config/kanbash/config
+# gwyrdh - make portable with config in pwd in hidden folder .kb
+# CONFIG=~/.config/kanbash/config
+CONFIG=$PWD/.kb/config
 
-# Load config. Expects 'nc', 'ip', 'dn' and 'board'.
+# Load config. Expects 'nc', 'ip', 'dn' and 'board'
 load_config() {
     if [[ -f "$CONFIG" ]]; then
         source "$CONFIG"
