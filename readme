@@ -2,32 +2,49 @@ KANBASH
 
 An opinionated kanban board written in bash.
 
+original icyphox
+this version hacks by gwyrdh
+
 USAGE
 
 kb add  COL STR         adds string to column
 kb list COL             lists enumerated tasks
 kb move COL NUM COL     moves from column to column, by number
 kb all                  list all columns; default output when run without args
+Added in this version
+kb remove COL NUM		 remove task
+kb edit COL			edit column file in editor
+kb note COL NUM		if task is a file name in board then this will open note file
 
 CONFIGURATION
 
-kanbash expects a config file at $HOME/.config/kanbash/config
+This version 
+kanbash expects a config file at $pwd/.kb/config
 example config:
     
     # not completed
-    nc="nc"
+    in="in"
     
     # in progress
-    ip="ip"
-    
-    # done
-    dn="done"
+    work="work"
 
-    board=/home/icy/code/kanbash/test
+    # waiting to be zapped (validated/reviewed/held up)
+    zap="zap"
+
+Other column files can be created in $pwd it is just that they will not be shown with kb all
+They can be viewed with list "name" and can have tasks moved into / from them
+    
+
+    board=$pwd
 
 board can also be specified by setting the KB_BOARD environment
 variable; use absolute paths (/home/user/foo/bar).
 
 WHY
 
-Trello sucks.
+Trello sucks .. and icyphox has made a good framework for hacking
+
+ALSO THANKS FOR IDEAS TO
+
+coderofsalvation for kanban bash https://github.com/coderofsalvation/kanban.bash
+kitplummer clikan https://github.com/kitplummer/clikan
