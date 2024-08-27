@@ -152,6 +152,29 @@ move() {
     for line in "${f[@]}"; do
          printf '%s\n' "$line" >> "$board/$fcol"
     done
+    kb
+}
+
+# gwyrdh added copy task based on move
+copy() {
+    [[ "$#" -ne 3 ]] && {
+        printf '%s\n' "error: invalid number of arguments"
+        usage
+        exit
+    }
+
+    fcol="$1"
+    n="$2"
+    tcol="$3"
+
+    check_col "$fcol"
+    check_col "$tcol"
+
+    mapfile -t f < "$board/$fcol"
+    chosen="${f["$n"]}"
+
+    printf '%s\n' "$chosen" >> "$board/$tcol"
+    kb
 }
 
 # gwyrdh added remove based on move
@@ -276,6 +299,10 @@ main() {
         r*)
             shift
             remove "$@"
+            ;;
+        c*)
+            shift
+            copy "$@"
             ;;
             
  	e*)
