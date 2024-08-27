@@ -12,9 +12,10 @@ kb list COL             lists enumerated tasks
 kb move COL NUM COL     moves from column to column, by number
 kb all                  list all columns; default output when run without args
 Added in this version
-kb remove COL NUM		 remove task
-kb edit COL			edit column file in editor
-kb note COL NUM		if task is a file name in board then this will open note file
+kb remove COL NUM		remove task
+kb edit COL			    edit column file in editor
+kb note COL NUM	        if task is a file name in board then this will open note file
+kb copy COL NUM COL     copies a task from column to column
 
 CONFIGURATION
 
@@ -33,6 +34,8 @@ example config:
 
 Other column files can be created in $pwd it is just that they will not be shown with kb all
 They can be viewed with list "name" and can have tasks moved into / from them
+
+I sym link my todo.txt list into each of my project folders and can then copy in and out from this
     
 
     board=$pwd
